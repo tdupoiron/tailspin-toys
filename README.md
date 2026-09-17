@@ -20,6 +20,9 @@ The workflow only runs on repositories created from the template (the `if: ${{ !
 
 ## Getting started
 
+> Attending a workshop or hackathon? Start with [SETUP.md](SETUP.md) — it walks through Node,
+> the Copilot app, creating your own repo from this template, and verifying the tests run.
+
 Install dependencies once with Node.js 22.13 or later (`npm run dev` also does this for you):
 
 ```bash
