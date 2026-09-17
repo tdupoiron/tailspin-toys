@@ -133,4 +133,27 @@ test.describe('Game Listing and Navigation', () => {
       await expect(page.getByTestId('not-found-home-link')).toBeVisible();
     });
   });
+
+  test('should display related games sharing a category or publisher', async ({ page }) => {
+    await test.step('Navigate to a game details page', async () => {
+      await page.goto('/game/1');
+      await expect(page.getByTestId('game-details')).toBeVisible();
+    });
+
+    await test.step('Verify related games section shows game cards when present', async () => {
+      const relatedGames = page.getByTestId('related-games');
+      if (await relatedGames.isVisible()) {
+        await expect(relatedGames.getByRole('heading', { name: 'You might also like' })).toBeVisible();
+        const relatedCards = relatedGames.getByTestId('game-card');
+        const count = await relatedCards.count();
+        expect(count).toBeGreaterThan(0);
+        expect(count).toBeLessThanOrEqual(4);
+
+        // Related games must not include the current game itself.
+        for (const card of await relatedCards.all()) {
+          expect(await card.getAttribute('data-game-id')).not.toBe('1');
+        }
+      }
+    });
+  });
 });

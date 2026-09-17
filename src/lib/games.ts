@@ -1,4 +1,4 @@
-import { eq, asc } from 'drizzle-orm';
+import { eq, asc, desc, ne, or, and } from 'drizzle-orm';
 import type { Database } from './db';
 import { games, categories, publishers } from '../../db/schema';
 import type { Game } from '../types/game';
@@ -66,4 +66,33 @@ export async function getAllGameIds(db: Database): Promise<number[]> {
 export async function getGameById(db: Database, id: number): Promise<Game | null> {
     const row = await baseGamesQuery(db).where(eq(games.id, id)).get();
     return row ? mapGame(row) : null;
+}
+
+/**
+ * Games related to the given game because they share its category or
+ * publisher, excluding the game itself. Ordered by star rating (highest
+ * first) then title so results are deterministic across builds, and
+ * capped at `limit` entries.
+ */
+export async function getRelatedGames(db: Database, game: Game, limit = 4): Promise<Game[]> {
+    const categoryId = game.category?.id;
+    const publisherId = game.publisher?.id;
+
+    if (categoryId === undefined && publisherId === undefined) {
+        return [];
+    }
+
+    const relationMatch =
+        categoryId !== undefined && publisherId !== undefined
+            ? or(eq(games.categoryId, categoryId), eq(games.publisherId, publisherId))
+            : categoryId !== undefined
+              ? eq(games.categoryId, categoryId)
+              : eq(games.publisherId, publisherId as number);
+
+    const rows = await baseGamesQuery(db)
+        .where(and(ne(games.id, game.id), relationMatch))
+        .orderBy(desc(games.starRating), asc(games.title))
+        .limit(limit);
+
+    return rows.map(mapGame);
 }
