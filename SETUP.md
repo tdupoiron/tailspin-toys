@@ -47,45 +47,41 @@ Write it down so you're not hunting for it later:
 My repo: github.com/ ______________ / ______________
 ```
 
-The template repo ships a
-[starter backlog of feature issues](https://github.com/tdupoiron/tailspin-toys/issues) — that
-backlog is your hackathon material, so you don't have to invent anything. Note that **issues
-are not copied** by "Use this template"; pick the ones you want and recreate them in your copy
-(or let your facilitator hand them out on the day).
+Your new repo comes with a **starter backlog of feature issues** already filed — that backlog is
+your hackathon material, so you don't have to invent anything.
 
 > 🔒 **"Use this template" doesn't work?** If your company uses Enterprise Managed Users this
 > can be restricted. Tell your facilitator — there's a prepared fallback repo.
 
 > 🔁 **Already created it under your personal account?** You don't have to start over.
 > Open the repo → **Settings** → **Transfer ownership** → pick the org. Issues, branches and
-> history all move with it. Then repoint your clone:
-> ```bash
-> git remote set-url origin https://github.com/<your-org>/<your-repo>.git
-> ```
+> history all move with it. If you'd already added it to the Copilot app, remove the project and
+> add it again at its new location.
 
 ---
 
 ## 4. Prove it runs
 
-```bash
-git clone https://github.com/<your-org>/<your-repo>.git
-cd <your-repo>
-npm ci
-npm run test:unit
-```
+Do this **in the Copilot app** — you won't need a terminal.
 
-Tests running — even with failures — means you're ready. The agent will use them to check its
-own work.
+1. In the app, add your repo as a project (**Add project** → pick `<your-org>/<your-repo>`).
+   The app clones it for you.
+2. Start a **new session** on that project.
+3. Ask the agent, in plain English:
 
-Optionally, confirm the site itself starts:
+   > Install the dependencies and run the unit tests, then tell me the result.
 
-```bash
-npm run dev   # migrates + seeds the local SQLite DB, then serves http://localhost:4321
-```
+4. Approve the commands when the app asks.
 
-> ℹ️ **There is no `npm test` in this repo.** The scripts are `npm run test:unit` (Vitest) and
-> `npm run test:e2e` (Playwright). Only the unit tests are needed for setup — the E2E suite
-> builds the site and needs `npx playwright install chromium`, so leave it for the day itself.
+Tests running — even with failures — means you're ready. The agent will use those same tests to
+check its own work during the hackathon.
+
+Want to see the site too? In the same session, ask:
+
+> Start the dev server and open it in a browser canvas.
+
+> ℹ️ **Heads up:** only the unit tests are needed for setup. The end-to-end suite builds the
+> site and downloads a browser, so leave that for the day itself.
 
 ---
 
@@ -94,7 +90,7 @@ npm run dev   # migrates + seeds the local SQLite DB, then serves http://localho
 - [ ] Node 22.13+ and git
 - [ ] Copilot app signed in with **work** identity
 - [ ] My repo exists, in the **right org**
-- [ ] `npm ci` and `npm run test:unit` have run at least once
+- [ ] The Copilot app has my repo as a project, and the unit tests have run at least once
 - [ ] I know my repo URL
 
 **Bring a laptop that can install things and reach the internet.** If you'll be on guest
