@@ -16,13 +16,6 @@ This is a crowdfunding platform for games with a developer theme. The applicatio
 
 ### Required Before Each Commit
 
-#### Testing guidelines
-
-- Don't run the test suites by default — they're slow. Run them only when the user asks, or when a change is risky enough to need them.
-- **When you do run tests or lint, go through the `quality-checks` skill — never invoke `npm run test:unit`, `npm run test:e2e`, or `npm run lint` directly.** The skill wraps environment setup, ordering, and troubleshooting. (Starting the app for manual validation is not a quality check — run `npm run dev` directly for that.)
-- Review the existing tests to ensure we're not duplicating efforts
-- Test code should be of the same quality as the rest of the project, and follow DRY principles
-
 #### Project guidelines
 
 - When updating the database schema, generate and commit the drizzle-kit migration (`npm run db:generate`)

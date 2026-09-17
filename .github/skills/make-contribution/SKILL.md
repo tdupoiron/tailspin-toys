@@ -10,7 +10,6 @@ Most every project has a set of contribution guidelines everyone needs to follow
 - Creating an issue before creating a PR, or creating the two in conjunction
 - Templates for issues or PRs that must be used depending on the change request being made
 - Guidelines on what needs to be documented in those issues and PRs
-- Tests, linters, and other prerequisites that need to be run before pushing any changes
 
 Always remember, you are a guest in someone else's repository. As such, you need to follow the rules and guidelines set forth by the repository owner when contributing code.
 
@@ -35,10 +34,7 @@ If no guidance is found, or doesn't provide guidance on certain topics, then use
 Many repository owners will have guidance on prerequisite steps which need to be completed before a PR is to be created. This can include, but is not limited to:
 
 - building the project or generating assets
-- running linters and ensuring any issues are resolved
 - naming guidelines and other patterns
-- unit tests, end to end tests, or other tests which need to be created and pass
-  - related, there may be required coverage percentages
 
 Look through all guidance you find, and ensure any prerequisites have been satisfied.
 

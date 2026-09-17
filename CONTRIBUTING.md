@@ -55,16 +55,12 @@ Before you can run and test the application locally, you'll need to install:
 - Use type hints for all function parameters and return values
 - Keep data-access helpers in `src/lib/` with an injectable `db` argument
 - Add or update Vitest tests for any data-layer change
-- Run tests before submitting: `npm run test:unit`
-   - All tests must pass
 
 ### Frontend (Astro)
 
 - Build UI as `.astro` pages and components; query data in frontmatter (static output)
 - Follow the dark theme using Tailwind CSS utility classes
 - Add `data-testid` attributes to interactive elements for testing
-- Run E2E tests before submitting: `npm run test:e2e`
-   - All tests must pass
 
 ## Submitting a Pull Request
 
@@ -81,21 +77,14 @@ All change requests should start with an issue. You're welcome to file the issue
 
 2. Make your changes, following the documented coding standards.
 
-3. Run the test suites to ensure nothing is broken:
-   ```bash
-   npm run lint
-   npm run test:unit
-   npm run test:e2e
-   ```
-
-4. Commit your changes with a clear, descriptive message:
+3. Commit your changes with a clear, descriptive message:
    ```bash
    git commit -m "Add feature: brief description of changes"
    ```
 
-5. Push to your fork and [submit a pull request][pr].
+4. Push to your fork and [submit a pull request][pr].
 
-6. Wait for your pull request to be reviewed and merged.
+5. Wait for your pull request to be reviewed and merged.
 
 ### Pull Request Guidelines
 
@@ -103,7 +92,6 @@ All change requests should start with an issue. You're welcome to file the issue
 - Keep your changes focused. If you have multiple unrelated changes, submit them as separate pull requests.
 - Write clear commit messages that explain *what* and *why*.
 - Update documentation if your changes affect how the application works.
-- Ensure all tests pass before requesting a review.
 - Be responsive to feedback and ready to make adjustments.
 
 ## Reporting Issues

@@ -43,9 +43,9 @@ jobs:
       - name: Sync Astro types
         run: npx astro sync
 
-      # Run ESLint to check code quality
+      # ESLint is invoked directly; package.json only exposes `dev` and `build`.
       - name: Run ESLint
-        run: npm run lint
+        run: npx eslint .
 
   # Type-check the codebase: pure TypeScript via the native TS 7 compiler (tsgo,
   # from @typescript/native-preview) and .astro files via astro check (which runs
@@ -71,7 +71,10 @@ jobs:
 
       # tsgo (TS 7) for .ts + astro sync/check (classic TS) for .astro
       - name: Run type-check
-        run: npm run typecheck:all
+        run: |
+          npx tsgo --noEmit -p tsconfig.tsgo.json
+          npx astro sync
+          npx astro check
 
   # Run the Vitest unit tests (pure transforms + data-access helpers)
   unit-tests:
@@ -94,7 +97,7 @@ jobs:
         run: npm ci
 
       - name: Run unit tests
-        run: npm run test:unit
+        run: npx vitest run
 
   # Build the static site and run the Playwright end-to-end suite against it
   frontend-tests:
@@ -126,7 +129,7 @@ jobs:
       # The Playwright config's webServer builds the static site (prebuild runs
       # db:migrate + db:seed) and serves it via `astro preview` before the suite.
       - name: Run Playwright e2e tests
-        run: npm run test:e2e
+        run: npx playwright test
         env:
           CI: true
 
