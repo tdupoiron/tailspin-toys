@@ -30,15 +30,12 @@
 
 ### Data Layer Changes
 
-- [ ] Ran `npm run test:unit` - all tests pass
 - [ ] Added/updated Vitest tests for data-layer changes
 - [ ] Generated a migration (`npm run db:generate`) for any schema change
 
 ### Frontend Changes
 
-- [ ] Ran `npm run test:e2e` - all tests pass
 - [ ] Added `data-testid` attributes to interactive elements
-- [ ] Verified build succeeds (`npm run build`)
 
 ## Checklist
 
