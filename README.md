@@ -20,7 +20,7 @@ The workflow only runs on repositories created from the template (the `if: ${{ !
 
 ## Getting started
 
-Install dependencies once with Node.js 22.13 or later:
+Install dependencies once with Node.js 22.13 or later (`npm run dev` also does this for you):
 
 ```bash
 npm ci
@@ -33,7 +33,7 @@ npx playwright install chromium   # only needed to run the E2E tests
 npm run dev
 ```
 
-`predev` migrates and seeds the local database first. Then navigate to the [website](http://localhost:4321) to see the site!
+`predev` stops any dev server already holding port 4321, installs dependencies (`npm install`), and migrates + seeds the local database first. Then navigate to the [website](http://localhost:4321) to see the site!
 
 To preview a production build instead:
 

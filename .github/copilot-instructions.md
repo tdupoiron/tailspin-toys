@@ -67,10 +67,10 @@ This is a crowdfunding platform for games with a developer theme. The applicatio
 
 ## Scripts
 
-- The project uses **npm scripts** for all development tasks — there is no `scripts/` directory.
+- The project uses **npm scripts** for all development tasks. The only helper file is `scripts/free-port.mjs`, invoked by `predev`.
 - **Skills take precedence.** Before running a command directly, check whether a skill covers the task (e.g. the `quality-checks` skill wraps tests and lint). If one applies, follow it.
 - Key npm scripts:
-  - `npm run dev` — start the Astro dev server (`predev` migrates + seeds the local SQLite database)
+  - `npm run dev` — start the Astro dev server (`predev` stops any dev server already on port 4321, installs dependencies, then migrates + seeds the local SQLite database)
   - `npm run build` — build the static site (`prebuild` migrates + seeds the local SQLite database)
   - `npm run preview` — serve the built `dist/` output
   - `npm run lint` — ESLint
