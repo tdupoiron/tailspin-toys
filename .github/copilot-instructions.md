@@ -18,13 +18,10 @@ This is a crowdfunding platform for games with a developer theme. The applicatio
 
 #### Testing guidelines
 
-- **Always run tests and lint through the `quality-checks` skill — never invoke `npm run test:unit`, `npm run test:e2e`, or `npm run lint` directly.** The skill wraps environment setup, ordering, and troubleshooting. (Starting the app for manual validation is not a quality check — run `npm run dev` directly for that.)
-- Run Vitest unit tests to verify the data layer and transforms, and Playwright tests to verify e2e and frontend functionality
-- Run ESLint to check frontend code quality before committing
+- Don't run the test suites by default — they're slow. Run them only when the user asks, or when a change is risky enough to need them.
+- **When you do run tests or lint, go through the `quality-checks` skill — never invoke `npm run test:unit`, `npm run test:e2e`, or `npm run lint` directly.** The skill wraps environment setup, ordering, and troubleshooting. (Starting the app for manual validation is not a quality check — run `npm run dev` directly for that.)
 - Review the existing tests to ensure we're not duplicating efforts
 - Test code should be of the same quality as the rest of the project, and follow DRY principles
-- For frontend changes, verify the build (`npm run build`) directly, and run the end-to-end tests through the `quality-checks` skill, to ensure everything works correctly
-- When changing the data layer (schema, helpers, transforms), update and run the corresponding unit tests
 
 #### Project guidelines
 
@@ -67,10 +64,10 @@ This is a crowdfunding platform for games with a developer theme. The applicatio
 
 ## Scripts
 
-- The project uses **npm scripts** for all development tasks — there is no `scripts/` directory.
+- The project uses **npm scripts** for all development tasks. The only helper file is `scripts/free-port.mjs`, invoked by `predev`.
 - **Skills take precedence.** Before running a command directly, check whether a skill covers the task (e.g. the `quality-checks` skill wraps tests and lint). If one applies, follow it.
 - Key npm scripts:
-  - `npm run dev` — start the Astro dev server (`predev` migrates + seeds the local SQLite database)
+  - `npm run dev` — start the Astro dev server (`predev` stops any dev server already on port 4321, installs dependencies, then migrates + seeds the local SQLite database)
   - `npm run build` — build the static site (`prebuild` migrates + seeds the local SQLite database)
   - `npm run preview` — serve the built `dist/` output
   - `npm run lint` — ESLint
