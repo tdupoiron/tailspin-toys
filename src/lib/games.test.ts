@@ -6,6 +6,7 @@ import {
     getAllGames,
     getAllGameIds,
     getGameById,
+    getRelatedGames,
 } from './games';
 
 async function seedGames(db: Database, count: number): Promise<void> {
@@ -62,5 +63,192 @@ describe('games data-access helpers', () => {
     it('returns null for a non-existent game', async () => {
         await seedGames(db, 2);
         expect(await getGameById(db, 99999)).toBeNull();
+    });
+});
+
+describe('getRelatedGames', () => {
+    let db: Database;
+
+    beforeEach(async () => {
+        db = await createTestDatabase();
+    });
+
+    it('returns games sharing a category or publisher, excluding the current one', async () => {
+        const [strategy] = await db
+            .insert(categories)
+            .values({ name: 'Strategy', description: 'cat' })
+            .returning({ id: categories.id });
+        const [puzzle] = await db
+            .insert(categories)
+            .values({ name: 'Puzzle', description: 'cat' })
+            .returning({ id: categories.id });
+        const [pubOne] = await db
+            .insert(publishers)
+            .values({ name: 'Pub One', description: 'pub' })
+            .returning({ id: publishers.id });
+        const [pubTwo] = await db
+            .insert(publishers)
+            .values({ name: 'Pub Two', description: 'pub' })
+            .returning({ id: publishers.id });
+
+        const [current] = await db
+            .insert(games)
+            .values({
+                title: 'Current Game',
+                description: 'desc',
+                starRating: 4.0,
+                categoryId: strategy.id,
+                publisherId: pubOne.id,
+            })
+            .returning({ id: games.id });
+
+        // Shares category with current game.
+        await db.insert(games).values({
+            title: 'Same Category',
+            description: 'desc',
+            starRating: 3.5,
+            categoryId: strategy.id,
+            publisherId: pubTwo.id,
+        });
+
+        // Shares publisher with current game.
+        await db.insert(games).values({
+            title: 'Same Publisher',
+            description: 'desc',
+            starRating: 4.5,
+            categoryId: puzzle.id,
+            publisherId: pubOne.id,
+        });
+
+        // Unrelated game (different category and publisher).
+        await db.insert(games).values({
+            title: 'Unrelated Game',
+            description: 'desc',
+            starRating: 5.0,
+            categoryId: puzzle.id,
+            publisherId: pubTwo.id,
+        });
+
+        const currentGame = await getGameById(db, current.id);
+        const related = await getRelatedGames(db, currentGame!);
+
+        expect(related.map((g) => g.title)).toEqual(['Same Publisher', 'Same Category']);
+    });
+
+    it('orders related games by star rating (highest first) then title', async () => {
+        const [category] = await db
+            .insert(categories)
+            .values({ name: 'Strategy', description: 'cat' })
+            .returning({ id: categories.id });
+        const [publisher] = await db
+            .insert(publishers)
+            .values({ name: 'Pub One', description: 'pub' })
+            .returning({ id: publishers.id });
+
+        const [current] = await db
+            .insert(games)
+            .values({
+                title: 'Current Game',
+                description: 'desc',
+                starRating: 4.0,
+                categoryId: category.id,
+                publisherId: publisher.id,
+            })
+            .returning({ id: games.id });
+
+        await db.insert(games).values({
+            title: 'B Tied Rating',
+            description: 'desc',
+            starRating: 4.5,
+            categoryId: category.id,
+            publisherId: publisher.id,
+        });
+        await db.insert(games).values({
+            title: 'A Tied Rating',
+            description: 'desc',
+            starRating: 4.5,
+            categoryId: category.id,
+            publisherId: publisher.id,
+        });
+        await db.insert(games).values({
+            title: 'Lowest Rating',
+            description: 'desc',
+            starRating: 3.0,
+            categoryId: category.id,
+            publisherId: publisher.id,
+        });
+
+        const currentGame = await getGameById(db, current.id);
+        const related = await getRelatedGames(db, currentGame!);
+
+        expect(related.map((g) => g.title)).toEqual([
+            'A Tied Rating',
+            'B Tied Rating',
+            'Lowest Rating',
+        ]);
+    });
+
+    it('caps the number of related games at the given limit', async () => {
+        const [category] = await db
+            .insert(categories)
+            .values({ name: 'Strategy', description: 'cat' })
+            .returning({ id: categories.id });
+        const [publisher] = await db
+            .insert(publishers)
+            .values({ name: 'Pub One', description: 'pub' })
+            .returning({ id: publishers.id });
+
+        const [current] = await db
+            .insert(games)
+            .values({
+                title: 'Current Game',
+                description: 'desc',
+                starRating: 4.0,
+                categoryId: category.id,
+                publisherId: publisher.id,
+            })
+            .returning({ id: games.id });
+
+        for (let i = 1; i <= 6; i++) {
+            await db.insert(games).values({
+                title: `Related ${i}`,
+                description: 'desc',
+                starRating: 4.0,
+                categoryId: category.id,
+                publisherId: publisher.id,
+            });
+        }
+
+        const currentGame = await getGameById(db, current.id);
+        const related = await getRelatedGames(db, currentGame!, 4);
+
+        expect(related).toHaveLength(4);
+    });
+
+    it('returns an empty array when there are no matching games', async () => {
+        const [category] = await db
+            .insert(categories)
+            .values({ name: 'Strategy', description: 'cat' })
+            .returning({ id: categories.id });
+        const [publisher] = await db
+            .insert(publishers)
+            .values({ name: 'Pub One', description: 'pub' })
+            .returning({ id: publishers.id });
+
+        const [current] = await db
+            .insert(games)
+            .values({
+                title: 'Lonely Game',
+                description: 'desc',
+                starRating: 4.0,
+                categoryId: category.id,
+                publisherId: publisher.id,
+            })
+            .returning({ id: games.id });
+
+        const currentGame = await getGameById(db, current.id);
+        const related = await getRelatedGames(db, currentGame!);
+
+        expect(related).toEqual([]);
     });
 });
