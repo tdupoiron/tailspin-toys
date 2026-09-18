@@ -1,0 +1,40 @@
+---
+import Sun from '../assets/icons/sun.svg';
+import Moon from '../assets/icons/moon.svg';
+---
+
+<button
+  id="theme-toggle"
+  type="button"
+  class="relative flex items-center justify-center h-9 w-9 rounded focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-(--color-header) transition-colors duration-200"
+  aria-label="Switch to light theme"
+  aria-pressed="true"
+  data-testid="theme-toggle"
+>
+  <Sun class="h-5 w-5 hidden dark:block" aria-hidden="true" />
+  <Moon class="h-5 w-5 block dark:hidden" aria-hidden="true" />
+</button>
+
+<script>
+  const STORAGE_KEY = 'theme';
+  const root = document.documentElement;
+  const toggle = document.getElementById('theme-toggle');
+
+  function applyLabel(isDark: boolean) {
+    if (!toggle) return;
+    toggle.setAttribute('aria-pressed', String(isDark));
+    toggle.setAttribute(
+      'aria-label',
+      isDark ? 'Switch to light theme' : 'Switch to dark theme'
+    );
+  }
+
+  // Reflect the theme already applied by the anti-flash script in <head>.
+  applyLabel(root.classList.contains('dark'));
+
+  toggle?.addEventListener('click', () => {
+    const isDark = root.classList.toggle('dark');
+    localStorage.setItem(STORAGE_KEY, isDark ? 'dark' : 'light');
+    applyLabel(isDark);
+  });
+</script>

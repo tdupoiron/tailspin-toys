@@ -6,11 +6,19 @@ Tailspin Toys is a crowdfunding platform for games with a developer theme. The p
 
 - **Astro 7** — pages, layouts, components, and routing. `output: 'static'`, so the whole site is prerendered to HTML at build time.
 - **Drizzle ORM + Node SQLite** — the data layer. The schema lives in `db/schema.ts`; data is seeded from `db/games.csv`. Migrations are managed with `drizzle-kit`.
-- **Tailwind CSS v4** — styling via utility classes (dark theme).
+- **Tailwind CSS v4** — styling via utility classes, with a light/dark theme toggle (see below).
 - **Vitest** — unit tests for the data layer and pure transforms.
 - **Playwright** — end-to-end tests run against the built static site.
 
 The database is migrated and seeded automatically before `dev`/`build` (via the `predev`/`prebuild` npm scripts) and is written to the gitignored `tailspin.db` file.
+
+## Theming
+
+The site supports both a light and a dark theme:
+
+- Colors are defined as semantic CSS variable tokens in `src/styles/global.css` (e.g. `--color-bg`, `--color-text-primary`, `--color-accent`), with light values in `:root` and dark overrides in `.dark`. Components consume these tokens via Tailwind v4's `bg-(--token)` / `text-(--token)` / `border-(--token)` syntax instead of hardcoded colors, so the whole app re-themes when the `dark` class is toggled on `<html>`.
+- A theme toggle button (`src/components/ThemeToggle.astro`) lives in the header. It defaults to the visitor's `prefers-color-scheme` setting and persists an explicit choice to `localStorage` under the `theme` key.
+- A small blocking inline script in `src/layouts/Layout.astro`'s `<head>` applies the stored/preferred theme before the page paints, avoiding a flash of the wrong theme.
 
 ## Using this template
 

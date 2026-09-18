@@ -1,1 +1,65 @@
 @import "tailwindcss";
+
+/* Enable class-based dark mode: toggling `.dark` on <html> drives `dark:` variants
+   instead of the OS-level `prefers-color-scheme` media query. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * Semantic color tokens. Light values live in :root; dark overrides live in .dark.
+ * Components reference these via Tailwind v4's arbitrary-property shorthand, e.g.
+ * `bg-(--color-surface)` / `text-(--color-text-primary)`, so a single toggle of the
+ * `dark` class on <html> re-themes the whole app without per-component `dark:` classes.
+ */
+:root {
+  --color-bg: var(--color-slate-100);
+  --color-surface: var(--color-white);
+  --color-surface-alt: var(--color-slate-100);
+  --color-header: var(--color-blue-500);
+  --color-header-text: var(--color-white);
+
+  --color-text-primary: var(--color-slate-900);
+  --color-text-secondary: var(--color-slate-700);
+  --color-text-muted: var(--color-slate-500);
+
+  --color-border: var(--color-slate-300);
+  --color-border-strong: var(--color-slate-400);
+
+  --color-accent: var(--color-blue-600);
+  --color-accent-hover: var(--color-blue-700);
+
+  --color-tag-blue-bg: var(--color-blue-100);
+  --color-tag-blue-text: var(--color-blue-800);
+  --color-tag-purple-bg: var(--color-purple-100);
+  --color-tag-purple-text: var(--color-purple-800);
+
+  --color-rating-bg: var(--color-blue-100);
+  --color-rating-text: var(--color-blue-800);
+  --color-rating-star: var(--color-yellow-800);
+}
+
+.dark {
+  --color-bg: var(--color-slate-900);
+  --color-surface: var(--color-slate-800);
+  --color-surface-alt: var(--color-slate-800);
+  --color-header: var(--color-blue-700);
+  --color-header-text: var(--color-white);
+
+  --color-text-primary: var(--color-slate-100);
+  --color-text-secondary: var(--color-slate-300);
+  --color-text-muted: var(--color-slate-400);
+
+  --color-border: var(--color-slate-700);
+  --color-border-strong: var(--color-slate-600);
+
+  --color-accent: var(--color-blue-400);
+  --color-accent-hover: var(--color-blue-300);
+
+  --color-tag-blue-bg: color-mix(in srgb, var(--color-blue-900) 60%, transparent);
+  --color-tag-blue-text: var(--color-blue-300);
+  --color-tag-purple-bg: color-mix(in srgb, var(--color-purple-900) 60%, transparent);
+  --color-tag-purple-text: var(--color-purple-300);
+
+  --color-rating-bg: color-mix(in srgb, var(--color-blue-500) 30%, transparent);
+  --color-rating-text: var(--color-blue-300);
+  --color-rating-star: var(--color-yellow-400);
+}
